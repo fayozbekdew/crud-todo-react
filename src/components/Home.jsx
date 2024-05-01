@@ -1,25 +1,23 @@
-
+import { CiCircleChevDown } from "react-icons/ci"
 import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { deleteUser, updateUser } from "../redux/UserReducer";
 import { BsTrash, BsPencil } from "react-icons/bs";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 function Home() {
   const { id } = useParams();
-  console.log(id);
-  const users = useSelector((state) => state.users);
-
-  const [name, setName] = useState(users.name);
-  const [email, setEmail] = useState(users.email);
+  const users = useSelector((state) => state.users.products);
+  console.log(users)
   const dispatch = useDispatch();
   const handle = ({ id }) => {
     dispatch(
       updateUser({
         id,
         name,
-        email,
+        price,
+        category,
+        description
       })
     );
   };
@@ -42,35 +40,37 @@ function Home() {
           {/* head */}
           <thead>
             <tr className="">
-              <th>ID</th>
               <th>Name</th>
-              <th>Email</th>
+              <th>Price</th>
+              <th>Category</th>
+              <th >Description</th>
               <th className="mr-auto">Action</th>
             </tr>
           </thead>
           <tbody>
-            {users.map((user, index) => (
-              <tr key={index}>
-                <td>{user.id}</td>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>
-                  <div className="flex gap-3">
-                    <Link
-                      to={`/update/${user.id}`}
-                      className="btn bg-info-content"
-                    >
-                      <BsPencil />
-                    </Link>
-                    <button
-                      onClick={() => handleDelete(user.id)}
-                      className=" btn bg-error-content"
-                    >
-                      <BsTrash />
-                    </button>
-                  </div>
-                </td>
-              </tr>
+            {users && users.map((user, index) => (
+              <tr key={index} className=''>
+              <td>{user.name}</td>
+              <td>{user.price} {user.categoryPrice}</td>
+              <td>{user.category}</td>
+              <td className="flex justify-center w-[200px]">{user.description ? user.description : 'No write description'}</td>
+              <td>
+                <div className="flex gap-3">
+                  <Link
+                    to={`/update/${user.id}`}
+                    className="btn btn-warning "
+                  >
+                    <BsPencil className="w-4 h-4" />
+                  </Link>
+                  <button
+                    onClick={() => handleDelete(user.id)}
+                    className="btn btn-active btn-error"
+                  >
+                    <BsTrash className="w-4 h-4" />
+                  </button>
+                </div>
+              </td>
+            </tr>
             ))}
           </tbody>
         </table>

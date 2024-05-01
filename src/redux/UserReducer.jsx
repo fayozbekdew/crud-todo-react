@@ -1,29 +1,39 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { userList } from "../Data";
 
+export const initialVal = {
+  products: localStorage.getItem("products")
+    ? JSON.parse(localStorage.getItem("products"))
+    : [],
+};
 const userSlice = createSlice({
   name: "users",
-  initialState: userList,
+  initialState: initialVal,
   reducers: {
     addUser: (state, action) => {
-      state.push(action.payload);
+      state.products.push(action.payload);
+      localStorage.setItem("products", JSON.stringify(state.products));
     },
     deleteUser: (state, action) => {
       const { id } = action.payload;
-      console.log(id);
-      const numID = state.find((user) => user.id == id);
+      const numID = state.products.find((user) => user.id == id);
       if (numID) {
-        return state.filter((user) => user.id != id);
+        const updateProducts = state.products.filter((user) => user.id != id);
+        state.products = updateProducts
+        localStorage.setItem('products', JSON.stringify(state.products))
+        // return updateProducts
       }
     },
     updateUser: (state, action) => {
-      const { id, name, email } = action.payload;
-      const upUser = state.find((user) => user.id == id);
+      const { id, name, price,category,description } = action.payload;
+      const upUser = state.products.find((user) => user.id == id);
       if (upUser) {
         upUser.name = name;
-        upUser.email = email;
+        upUser.price = price;
+        upUser.category = category;
+        upUser.description = description;
       }
-      // state.push(action.payload);
+      localStorage.setItem("products", JSON.stringify(state.products));
     },
   },
 });
